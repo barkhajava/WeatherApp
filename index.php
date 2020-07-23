@@ -60,31 +60,41 @@ curl_setopt($ch, CURLOPT_HEADER, 0);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 curl_setopt($ch, CURLOPT_URL, $url);
 $response = curl_exec($ch);
+
 curl_close($ch);
 
 $data = json_decode($response);
+
 $currentDate = time();
 ?>
     <div class="weather-container">
         <h2>Weather Forecast Widget</h2>
+        <?php 
+            if($data->cod != 200){
+                echo 'Plese enter a valid city';
+            }
+        ?>
         <div class="date">
          
-            <div><?php echo $city ; ?></div>
+            <div><?php if(isset($data->name)){echo $data->name;}else{ echo $city ;} ?></div>
             <div><?php echo date("jS F, Y",$currentDate); ?></div>
         </div>
         <div class="weather-forecast">
+            <?php if($data->cod == 200){ ?>
             <img
                 src="http://openweathermap.org/img/w/<?php echo $data->weather[0]->icon; ?>.png"
                 class="weather-icon" /> <?php echo $data->main->temp_max; ?>&deg;C / <span
                 class="min-temperature"><?php echo $data->main->temp_min; ?>&deg;C</span>
+                
         </div>
         <div class="time">
             <div>Humidity: <?php echo $data->main->humidity; ?> %</div>
             <div>Wind: <?php echo $data->wind->speed; ?> km/h</div>
         </div>
+            <?php } ?>
          <h3>Enter a city to search</h3>
          <form action ="index.php" method="get">
-         <input type="text" name="cityname" />
+         <input type="text" pattern="[A-Za-z]+" name="cityname" title="City name may only contain letters" />
          <input type="submit" value="Go" /> </form>
         </div>
 
