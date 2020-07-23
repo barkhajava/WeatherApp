@@ -26,8 +26,10 @@ body {
 
 </style>
 <body>
+    
 <?php    
 
+#Fetching the city from ipstack
 
 $url = "http://api.ipstack.com/check?access_key=7184746f9d7ae7a116f11f634fbdb157&format=1";
 $ch = curl_init();
@@ -50,7 +52,10 @@ $apiKey = "fbf652243dd227d900588132132aafbc";
             {
                 $cityName = $city;
             }
-
+            
+            
+#fetching the weather from openweathermap using the city
+            
 $url = "http://api.openweathermap.org/data/2.5/weather?q=" . $cityName . "&lang=en&units=metric&APPID=" . $apiKey;
 
 
@@ -67,9 +72,11 @@ $data = json_decode($response);
 
 $currentDate = time();
 ?>
+    
     <div class="weather-container">
         <h2>Weather Forecast Widget</h2>
         <?php 
+        #validation for city name
             if($data->cod != 200){
                 echo 'Plese enter a valid city';
             }
@@ -80,7 +87,9 @@ $currentDate = time();
             <div><?php echo date("jS F, Y",$currentDate); ?></div>
         </div>
         <div class="weather-forecast">
-            <?php if($data->cod == 200){ ?>
+            <?php 
+            #validation if we do not get a successful response
+            if($data->cod == 200){ ?>
             <img
                 src="http://openweathermap.org/img/w/<?php echo $data->weather[0]->icon; ?>.png"
                 class="weather-icon" /> <?php echo $data->main->temp_max; ?>&deg;C / <span
